@@ -1,64 +1,75 @@
-# OpenAI ChatBot
+# VirusTotal API Client
 
-This repository contains code and resources for building python collection script that leverages the VirusTotal API.
-
-## Overview
-
-This is a collection script that is to be used for interaction with the VirusTotal API.
+CLI client for the [VirusTotal API v3](https://docs.virustotal.com/reference/overview). Scan files, submit URLs, and pull IP/domain reports from the command line.
 
 ## Features
 
-- This script allows for the ability to leverage the Virustotal api in a fast and effective manner
-- The script allows the user to:
-  - Scan files
-  - submit urls
-  - search ip addresses
-  - pull domain reports
+- **File scan** -- submit a file for malware analysis
+- **URL scan** -- submit a URL for scanning
+- **IP report** -- retrieve threat intelligence for an IP address
+- **Domain report** -- retrieve threat intelligence for a domain
 
 ## Requirements
 
-To use the VirusTotal API Script, ensure you have the following:
-
-- Python 3.x
-- VirusTotal API key
+- Python 3.11+
+- [uv](https://docs.astral.sh/uv/) (package manager)
+- [just](https://github.com/casey/just) (task runner)
+- A [VirusTotal API key](https://www.virustotal.com/)
 
 ## Getting Started
 
 1. Clone the repository:
 
-   ```shell
-   git clone https://github.com/kagaston/VirusTotalAPI.git
-   ```
+```bash
+git clone https://github.com/kagaston/VirusTotalAPI.git
+cd VirusTotalAPI
+```
 
-2. Install the required dependencies:
-    ```shell
-    pip install -r requirements.txt
-    ```
+2. Install dependencies:
 
-3. Set up your OpenAI API key:
-   Visit the VirusTotal website to sign up for an API key.
-   Set the VIRUSTOTAL_API_KEY environment variable or update the config.py file with your API key.
-   Explore the code and files provided in the repository to understand how to use and customize the chatbot.
+```bash
+just sync
+```
+
+3. Set your API key (choose one):
+
+```bash
+# Option A: environment variable
+export VIRUSTOTAL_API_KEY="your-api-key-here"
+
+# Option B: .env file in project root
+echo 'VIRUSTOTAL_API_KEY=your-api-key-here' > .env
+```
 
 ## Usage
 
-To use the VirusTotal collection script, follow these steps:
+```bash
+# Scan a URL
+uv run virustotal-api url-scan https://example.com
 
-1. Install requirements:
-    ```shell
-    pip install requirements
-    ```
-2. Run the script
-    ```shell
-    python virustotal_api.py url-scan google.com
-    ```
+# Scan a file
+uv run virustotal-api file-scan /path/to/file.exe
 
-# Contributing
+# Get an IP report
+uv run virustotal-api ip-report 8.8.8.8
 
-Contributions to the virusTotal collection script are welcome!
+# Get a domain report
+uv run virustotal-api domain-report example.com
+```
 
-If you encounter any issues or have suggestions for improvements, feel free to submit a pull request or open an issue on the repository.
+## Development
 
-# License
+```bash
+just sync         # install dependencies
+just format       # format code with ruff
+just lint         # lint with ruff
+just typecheck    # type check with basedpyright
+just test         # run all tests
+just test virustotal  # run tests for a specific package
+just check        # run all CI checks (nox)
+just preflight    # format + lint + typecheck + test
+```
 
-This project is licensed under the MIT License.
+## License
+
+MIT

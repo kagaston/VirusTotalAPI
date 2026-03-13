@@ -1,0 +1,84 @@
+[project]
+name = "virustotal-api"
+version = "0.1.0"
+description = "CLI client for the VirusTotal API v3"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.11"
+authors = [{ name = "kagaston" }]
+dependencies = [
+    "vt-settings",
+    "vt-logger",
+    "vt-errors",
+    "virustotal",
+]
+
+[dependency-groups]
+dev = [
+    "basedpyright",
+    "nox",
+    "pytest",
+    "pytest-cov",
+    "responses",
+    "ruff",
+]
+
+[tool.uv.workspace]
+members = ["app/*"]
+exclude = ["app/__pycache__", "app/.pytest_cache"]
+
+[tool.uv.sources]
+vt-settings = { workspace = true }
+vt-logger = { workspace = true }
+vt-errors = { workspace = true }
+virustotal = { workspace = true }
+
+# --- Ruff ---
+[tool.ruff]
+target-version = "py311"
+src = ["app/*/src", "app/*/tests"]
+line-length = 120
+
+[tool.ruff.lint]
+select = ["B", "C4", "C90", "D", "E", "F", "I", "PLR", "PT", "RUF", "S", "SIM", "T20", "UP"]
+fixable = ["ALL"]
+ignore = ["D107", "D415", "D212", "D100", "D104"]
+exclude = ["tests/**"]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.ruff.lint.pylint]
+max-args = 5
+max-branches = 12
+max-returns = 6
+max-statements = 50
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.per-file-ignores]
+"**/tests/**/*.py" = ["D", "S101", "T20"]
+"noxfile.py" = ["D", "S101", "T20"]
+
+[tool.ruff.format]
+quote-style = "double"
+docstring-code-format = true
+
+# --- BasedPyright ---
+[tool.basedpyright]
+include = ["app/*/src"]
+pythonVersion = "3.11"
+typeCheckingMode = "standard"
+
+# --- Pytest ---
+[tool.pytest.ini_options]
+testpaths = ["app/virustotal/tests", "app/logger/tests", "app/errors/tests", "app/settings/tests"]
+addopts = ["-ra", "--strict-markers", "--strict-config", "--cov=app", "--cov-report=term-missing", "--cov-fail-under=80"]
+filterwarnings = [
+    "error",
+    "ignore::ResourceWarning",
+]
+
+[tool.coverage.run]
+omit = ["**/__init__.py"]
